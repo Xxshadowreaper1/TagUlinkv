@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TagUlink - Leaderboard</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+            --bg: #0b1220;
+            --panel: #111827;
+            --card: #1f2937;
+            --accent: #facc15;
+            --accent-dark: #f97316;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --highlight: #fde68a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #1f2937, #0b1220 55%);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 2.5rem 1.5rem 1.5rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(2.2rem, 4vw, 3rem);
+        }
+
+        header p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .panel {
+            background: var(--panel);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .header-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .header-row a {
+            text-decoration: none;
+            color: #0f172a;
+            background: var(--accent);
+            padding: 0.55rem 1.1rem;
+            border-radius: 999px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 0.8rem;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .header-row a:hover {
+            transform: translateY(-2px);
+            background: var(--accent-dark);
+        }
+
+        .scoreboard-cards {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .score-card {
+            background: #0b1220;
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+        }
+
+        .score-card h3 {
+            margin: 0 0 0.5rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .score-card p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .highlight {
+            background: rgba(250, 204, 21, 0.12);
+            border-color: rgba(250, 204, 21, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        th {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .note {
+            color: var(--muted);
+            margin: 0.75rem 0 0;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding-bottom: 2rem;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 720px) {
+            header {
+                padding: 2rem 1.25rem 1.25rem;
+            }
+
+            main {
+                padding: 0 1.25rem 2.5rem;
+                gap: 1.5rem;
+            }
+
+            .header-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            table {
+                min-width: 520px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Leaderboard</h1>
+        <p>Stats are updated in <strong>data.js</strong>, then reflected here.</p>
+    </header>
+
+    <main>
+        <section class="panel">
+            <div class="header-row">
+                <h2>Tag Rankings</h2>
+                <a href="TagUlink.html">Back to Arena</a>
+            </div>
+            <div class="scoreboard-cards">
+                <div class="score-card">
+                    <h3>Most Tagged</h3>
+                    <p id="mostTagged">-</p>
+                </div>
+                <div class="score-card">
+                    <h3>Least Tagged</h3>
+                    <p id="leastTagged">-</p>
+                </div>
+                <div class="score-card highlight">
+                    <h3>Tagged Last</h3>
+                    <p id="lastTagged">-</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>Roster Stats</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Times Tagged</th>
+                            <th>Last Tagged</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statRows"></tbody>
+                </table>
+            </div>
+            <p class="note">Edit the stats in <strong>data.js</strong> to update this page.</p>
+        </section>
+    </main>
+
+
+
+    <script src="data.js"></script>
+    <script>
+        const players = window.tagUlinkPlayers || [];
+
+        const mostTaggedEl = document.getElementById("mostTagged");
+        const leastTaggedEl = document.getElementById("leastTagged");
+        const lastTaggedEl = document.getElementById("lastTagged");
+        const statRows = document.getElementById("statRows");
+
+        const formatLastTagged = (value) => value || "Not tagged yet";
+
+        const updateLeaderboard = () => {
+            const counts = players.map((player) => player.count);
+            const highest = Math.max(...counts);
+            const lowest = Math.min(...counts);
+
+            const mostTagged = players.filter((player) => player.count === highest);
+            const leastTagged = players.filter((player) => player.count === lowest);
+            const lastTagged = players
+                .filter((player) => player.lastTagged)
+                .sort((a, b) => new Date(b.lastTagged) - new Date(a.lastTagged))[0];
+
+            mostTaggedEl.textContent = mostTagged.length
+                ? mostTagged.map((player) => `${player.name} (${player.count})`).join(", ")
+                : "-";
+            leastTaggedEl.textContent = leastTagged.length
+                ? leastTagged.map((player) => `${player.name} (${player.count})`).join(", ")
+                : "-";
+            lastTaggedEl.textContent = lastTagged
+                ? `${lastTagged.name} · ${formatLastTagged(lastTagged.lastTagged)}`
+                : "No one yet";
+        };
+
+        const buildRows = () => {
+            statRows.innerHTML = "";
+            players.forEach((player) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+          <td>${player.name}</td>
+          <td>${player.count}</td>
+          <td>${formatLastTagged(player.lastTagged)}</td>
+        `;
+                statRows.appendChild(row);
+            });
+        };
+
+        buildRows();
+        updateLeaderboard();
+    </script>
+</body>
+
+</html>

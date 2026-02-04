@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TagUlink - Aarush Thakur</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+            --bg: #0b1220;
+            --panel: #111827;
+            --card: #1f2937;
+            --accent: #facc15;
+            --accent-dark: #f97316;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #1f2937, #0b1220 55%);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 2.5rem 1.5rem 1.5rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 0.4rem;
+            font-size: clamp(2.1rem, 4vw, 3rem);
+        }
+
+        header p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        main {
+            flex: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .panel {
+            background: var(--panel);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #0f172a;
+            background: linear-gradient(120deg, var(--accent), var(--accent-dark));
+            padding: 0.65rem 1.3rem;
+            border-radius: 999px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-size: 0.78rem;
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+            border: 1px solid rgba(15, 23, 42, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 30px rgba(14, 165, 233, 0.4);
+        }
+
+        .profile {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: var(--accent);
+            color: #0f172a;
+        }
+
+        .details-grid {
+            display: grid;
+            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        }
+
+        .detail-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 0.75rem;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .detail-card h3 {
+            margin: 0 0 0.25rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+        }
+
+        .detail-card p {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-display {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        }
+
+        .stat-card {
+            background: #0b1220;
+            border-radius: 12px;
+            padding: 0.75rem;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .stat-card h3 {
+            margin: 0 0 0.25rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+        }
+
+        .stat-card p {
+            margin: 0;
+            font-weight: 600;
+        }
+
+
+
+        .secret-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(320px, 80vw);
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.96);
+            border-left: 2px solid rgba(250, 204, 21, 0.6);
+            color: var(--text);
+            padding: 1.5rem;
+            box-shadow: -10px 0 30px rgba(15, 23, 42, 0.5);
+            transform: translateX(110%);
+            transition: transform 0.25s ease;
+            z-index: 999;
+        }
+
+        .secret-panel.open {
+            transform: translateX(0);
+        }
+
+        .secret-panel h3 {
+            margin: 0 0 0.75rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+        }
+
+        .secret-panel p {
+            margin: 0 0 1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .secret-panel .secret-notes {
+            width: 100%;
+            min-height: 70vh;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text);
+            padding: 0.75rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .secret-panel .secret-notes::before {
+            content: "Edit this text in the HTML only.";
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .banner {
+            margin-top: 0.5rem;
+            padding: 0.6rem 0.9rem;
+            border-radius: 12px;
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            color: #fef9c3;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding-bottom: 2rem;
+        }
+
+        @media (max-width: 720px) {
+            header {
+                padding: 2rem 1.25rem 1.25rem;
+            }
+
+            main {
+                padding: 0 1.25rem 2.5rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+            }
+
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .details-grid,
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Aarush Thakur</h1>
+        <p>Big brain also just kinda built diffrent (its cause the coffe)</p>
+
+    </header>
+
+    <main>
+        <section class="panel nav-links">
+            <a href="TagUlink.html">Back to Arena</a>
+            <a href="leaderboard.html">Leaderboard</a>
+        </section>
+
+        <section class="panel profile">
+            <div class="profile-header">
+                <img src="aarush.jpg" , width="100" height="200">
+                <div>
+                    <h2>Player Profile</h2>
+                    <p class="stat-display">Age 15 · Update stats in data.js to change the leaderboard.</p>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-card">
+                    <h3>Speed</h3>
+                    <p>Medium-high (recently)</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Height</h3>
+                    <p>Average</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Tag IQ</h3>
+                    <p>High (insane plays)</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Tag Skill</h3>
+                    <p>High</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Size</h3>
+                    <p>Small</p>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <h3>Description</h3>
+                <p>Not super loud or anything, chill and doesn't draw much attention. Fairly laid back and easy going
+                    compared to others.</p>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <h3>Times Tagged</h3>
+                    <p id="timesTagged">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Last Tagged</h3>
+                    <p id="lastTagged">Not tagged yet</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <aside class="secret-panel" id="secretPanel" aria-hidden="true">
+        <h3>Secret Notes</h3>
+        <p>Alt + 8 or press and hold Leaderboard for 5 seconds.</p>
+        <div class="secret-notes">The amount of self glaze goes hard, big ahh ego, monkey, coolest guy alive with sole
+            exception of Woody TagUlink of course, also see that? I'm laid back compared to others les go, what a neck
+        </div>
+    </aside>
+
+
+
+    <script src="data.js"></script>
+    <script>
+        const playerId = "aarush-thakur";
+        const timesTaggedEl = document.getElementById("timesTagged");
+        const lastTaggedEl = document.getElementById("lastTagged");
+
+        const formatLastTagged = (value) => value || "Not tagged yet";
+        const playerStats = (window.tagUlinkPlayers || []).find((player) => player.id === playerId);
+
+        if (playerStats) {
+            timesTaggedEl.textContent = playerStats.count;
+            lastTaggedEl.textContent = formatLastTagged(playerStats.lastTagged);
+        } else {
+            timesTaggedEl.textContent = "0";
+            lastTaggedEl.textContent = formatLastTagged("");
+        }
+
+
+        const secretPanel = document.getElementById("secretPanel");
+
+        const toggleSecretPanel = () => {
+            secretPanel.classList.toggle("open");
+            secretPanel.setAttribute("aria-hidden", !secretPanel.classList.contains("open"));
+        };
+
+        document.addEventListener("keydown", (event) => {
+            if (event.altKey && event.key === "8") {
+                event.preventDefault();
+                toggleSecretPanel();
+            }
+        });
+
+        const leaderboardLink = document.querySelector('.nav-links a[href="leaderboard.html"]');
+        let holdTimer;
+        let holdTriggered = false;
+
+        const startHold = () => {
+            if (holdTimer) {
+                return;
+            }
+            holdTriggered = false;
+            holdTimer = setTimeout(() => {
+                holdTriggered = true;
+                toggleSecretPanel();
+            }, 5000);
+        };
+
+        const clearHold = () => {
+            if (holdTimer) {
+                clearTimeout(holdTimer);
+                holdTimer = null;
+            }
+        };
+
+        if (leaderboardLink) {
+            leaderboardLink.addEventListener("pointerdown", (event) => {
+                if (event.pointerType === "mouse" && event.button !== 0) {
+                    return;
+                }
+                startHold();
+            });
+            leaderboardLink.addEventListener("pointerup", clearHold);
+            leaderboardLink.addEventListener("pointerleave", clearHold);
+            leaderboardLink.addEventListener("pointercancel", clearHold);
+            leaderboardLink.addEventListener("touchstart", startHold, { passive: true });
+            leaderboardLink.addEventListener("touchend", clearHold);
+            leaderboardLink.addEventListener("touchcancel", clearHold);
+            leaderboardLink.addEventListener("click", (event) => {
+                if (holdTriggered) {
+                    event.preventDefault();
+                    holdTriggered = false;
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
